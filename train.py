@@ -26,8 +26,6 @@ graph the loss to see if its going down
 
 enable checkpoints and create a seperate play file to vs the bot
 
-
-
 '''
 
 
