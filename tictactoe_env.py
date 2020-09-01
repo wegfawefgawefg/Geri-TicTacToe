@@ -25,7 +25,7 @@ class TictactoeEnv:
         return self.encode_board()
 
     def encode_board(self):
-        encoded_board = np.zeros((2,3,3))
+        encoded_board = np.zeros((3,3,3))
 
         #   o's
         for y in range(3):
@@ -38,6 +38,13 @@ class TictactoeEnv:
             for x in range(3):
                 if not self.board[y][x] == 2:
                     encoded_board[1][y][x] = 1
+
+        #   turn
+        # print(self.turn)
+        player = 0.0 if self.turn == 'x' else 1.0
+        for y in range(3):
+            for x in range(3):
+                encoded_board[2][y][x] = player
 
         return encoded_board
 
@@ -107,15 +114,14 @@ class TictactoeEnv:
         if self.done:
             state_ = self.encode_board()
             return state_, 0, self.done, info
-        print("donecheck {}".format(done))
+        # print("donecheck {}".format(done))
 
-        move = action.argmax()
-        y = move // 3
-        x = move % 3
+        y = action // 3
+        x = action % 3
 
         if not self.is_valid_move(y, x):
             info["invalid_move"] = True
-            print("invalid move")
+            # print("invalid move")
             state_ = self.encode_board()
             return state_, self.invalid_move_reward, self.done, info
 
@@ -126,11 +132,11 @@ class TictactoeEnv:
         if winner:
             self.done = True
             reward = self.win_reward
-        print("player win {}".format(self.done))
+        # print("player win {}".format(self.done))
         
         if not self.moves_left():
             self.done = True
-        print("moves left {}".format(self.done))
+        # print("moves left {}".format(self.done))
 
         state_ = self.encode_board()
 
@@ -168,17 +174,17 @@ if __name__ == '__main__':
 
     done = False
     while not done:
-        print()
-        print("steps {}".format(steps))
-        env.render()
+        # print()
+        # print("steps {}".format(steps))
+        # env.render()
 
         random_move = random.randint(0, 8)
         action = np.zeros(9)
         action[random_move] = 1.0
-        print("action {}".format(random_move))
+        # print("action {}".format(random_move))
 
         state_, reward, done, info = env.step(action, player)
-        print("reward: {}, done: {}, info: {}".format(reward, done, info))
+        # print("reward: {}, done: {}, info: {}".format(reward, done, info))
 
         state = state_
         if not info["invalid_move"]:
@@ -188,7 +194,7 @@ if __name__ == '__main__':
                 player = 1
         
         steps += 1
-    print()
-    print()
-    print("GAME OVER")
-    env.render()
+    # print()
+    # print()
+    # print("GAME OVER")
+    # env.render()
